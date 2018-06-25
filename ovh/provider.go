@@ -57,12 +57,14 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"ovh_iploadbalancing_tcp_farm":        resourceIpLoadbalancingTcpFarm(),
-			"ovh_iploadbalancing_tcp_farm_server": resourceIpLoadbalancingTcpFarmServer(),
-			"ovh_iploadbalancing_http_route":      resourceIPLoadbalancingRouteHTTP(),
-			"ovh_iploadbalancing_http_route_rule": resourceIPLoadbalancingRouteHTTPRule(),
-			"ovh_domain_zone_record":              resourceOvhDomainZoneRecord(),
-			"ovh_domain_zone_redirection":         resourceOvhDomainZoneRedirection(),
+			"ovh_iploadbalancing_tcp_farm":         resourceIpLoadbalancingTcpFarm(),
+			"ovh_iploadbalancing_tcp_farm_server":  resourceIpLoadbalancingTcpFarmServer(),
+			"ovh_iploadbalancing_http_route":       resourceIPLoadbalancingRouteHTTP(),
+			"ovh_iploadbalancing_http_route_rule":  resourceIPLoadbalancingRouteHTTPRule(),
+			"ovh_dedicated_nasha_partition":        resourceDedicatedNASHAPartition(),
+			"ovh_dedicated_nasha_partition_access": resourceDedicatedNASHAPartitionAccess(),
+			"ovh_domain_zone_record":               resourceOvhDomainZoneRecord(),
+			"ovh_domain_zone_redirection":          resourceOvhDomainZoneRedirection(),
 			// New naming schema (issue #23)
 			"ovh_cloud_network_private":        resourcePublicCloudPrivateNetwork(),
 			"ovh_cloud_network_private_subnet": resourcePublicCloudPrivateNetworkSubnet(),
