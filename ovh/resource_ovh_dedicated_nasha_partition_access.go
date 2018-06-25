@@ -70,7 +70,7 @@ func resourceDedicatedNASHAPartitionAccessCreate(d *schema.ResourceData, meta in
 	if err != nil {
 		return fmt.Errorf("waiting for NASHA partition access (%s): %s", access, err)
 	}
-	log.Printf("[DEBUG] Created NASHA partition access %s", resp)
+	log.Printf("[DEBUG] Created NASHA partition access")
 
 	d.SetId(fmt.Sprintf("dedicated_nasha_%s_partition_%s_access_%s", serviceName, partitionName, ip))
 

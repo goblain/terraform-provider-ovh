@@ -65,16 +65,16 @@ func resourceDedicatedNASHAPartitionCreate(d *schema.ResourceData, meta interfac
 
 	err := config.OVHClient.Post(endpoint, partition, resp)
 	if err != nil {
-		return fmt.Errorf("calling %s with params %s:\n\t %q", endpoint, partition, err)
+		return fmt.Errorf("calling %s with params %q:\n\t %s", endpoint, partition, err.Error())
 	}
 
 	stateConf := resp.StateChangeConf(d, meta)
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("waiting for NASHA partition (%s): %s", partition, err)
+		return fmt.Errorf("waiting for NASHA partition (%q): %s", partition, err.Error())
 	}
-	log.Printf("[DEBUG] Created NASHA partition %s", resp)
+	log.Printf("[DEBUG] Created NASHA partition")
 
 	d.SetId(fmt.Sprintf("dedicated_nasha_%s_partition_%s", serviceName, name))
 
@@ -169,7 +169,7 @@ func resourceDedicatedNASHAPartitionDelete(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("waiting for NASHA partition delete: %s", err)
 	}
 
-	log.Printf("[DEBUG] Deleted NASHA partition %s", resp)
+	log.Printf("[DEBUG] Deleted NASHA partition")
 
 	return nil
 }
