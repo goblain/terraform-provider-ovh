@@ -93,11 +93,13 @@ func resourceDedicatedNASHAPartitionRead(d *schema.ResourceData, meta interface{
 	endpoint := fmt.Sprintf("/dedicated/nasha/%s/partition/%s", serviceName, name)
 
 	err := config.OVHClient.Get(endpoint, resp)
-	if err.Error() == fmt.Sprintf("Error 404: \"The requested object (partitionName = %s) does not exist\"", name) {
-		d.SetId("")
-		return nil
-	} else if err != nil {
-		return fmt.Errorf("Error calling %s:\n\t '%q'", endpoint, err)
+	if err != nil {
+		if err.Error() == fmt.Sprintf("Error 404: \"The requested object (partitionName = %s) does not exist\"", name) {
+			d.SetId("")
+			return nil
+		} else {
+			return fmt.Errorf("Error calling %s:\n\t '%q'", endpoint, err)
+		}
 	}
 
 	d.Set("size", resp.Size)

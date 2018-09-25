@@ -6,7 +6,7 @@ description: |-
   Provides a resource for managing access rights to partitions on NASHA services
 ---
 
-# ovh_dedicated_nasha_partition
+# ovh_dedicated_nasha_partition_access
 
 Provides a resource for managing access rights to partitions on NASHA services
 

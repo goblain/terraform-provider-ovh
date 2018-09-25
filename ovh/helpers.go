@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/ovh/go-ovh/ovh"
@@ -97,4 +98,11 @@ func CheckDeleted(d *schema.ResourceData, err error, endpoint string) error {
 	}
 
 	return fmt.Errorf("calling %s:\n\t %s", endpoint, err.Error())
+}
+
+func normalizeIPSubnet(ip string) (string, error) {
+	if !strings.Contains(ip, "/") {
+		ip += "/32"
+	}
+	return ip, nil
 }

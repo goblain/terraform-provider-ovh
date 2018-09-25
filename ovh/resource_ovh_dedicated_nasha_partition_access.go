@@ -48,7 +48,7 @@ func resourceDedicatedNASHAPartitionAccessCreate(d *schema.ResourceData, meta in
 	config := meta.(*Config)
 	serviceName := d.Get("service_name").(string)
 	partitionName := d.Get("partition_name").(string)
-	ip := d.Get("ip").(string)
+	ipsubnet, _ := normalizeIPSubnet(d.Get("ip").(string))
 
 	access := &DedicatedNASHAPartitionAccess{
 		IP:   d.Get("ip").(string),
@@ -72,7 +72,7 @@ func resourceDedicatedNASHAPartitionAccessCreate(d *schema.ResourceData, meta in
 	}
 	log.Printf("[DEBUG] Created NASHA partition access")
 
-	d.SetId(fmt.Sprintf("dedicated_nasha_%s_partition_%s_access_%s", serviceName, partitionName, ip))
+	d.SetId(fmt.Sprintf("dedicated_nasha_%s_partition_%s_access_%s", serviceName, partitionName, ipsubnet))
 
 	return nil
 }
@@ -81,20 +81,22 @@ func resourceDedicatedNASHAPartitionAccessRead(d *schema.ResourceData, meta inte
 	config := meta.(*Config)
 	serviceName := d.Get("service_name").(string)
 	partitionName := d.Get("partition_name").(string)
-	ip := url.PathEscape(d.Get("ip").(string))
+	ipsubnet, _ := normalizeIPSubnet(d.Get("ip").(string))
 
 	resp := &DedicatedNASHAPartitionAccess{}
 
-	endpoint := fmt.Sprintf("/dedicated/nasha/%s/partition/%s/access/%s", serviceName, partitionName, ip)
+	endpoint := fmt.Sprintf("/dedicated/nasha/%s/partition/%s/access/%s", serviceName, partitionName, url.PathEscape(ipsubnet))
 
 	err := config.OVHClient.Get(endpoint, resp)
-	if err.Error() == fmt.Sprintf("Error 404: \"The requested object (ip = %s) does not exist\"", ip) {
-		d.SetId("")
-		return nil
-	} else if err != nil {
-		return fmt.Errorf("Error calling %s:\n\t '%q'", endpoint, err)
+	if err != nil {
+		if err.Error() == fmt.Sprintf("Error 404: \"The requested object (ip = %s) does not exist\"", ipsubnet) ||
+			err.Error() == fmt.Sprintf("Error 404: \"The requested object (partitionName = %s) does not exist\"", partitionName) {
+			d.SetId("")
+			return nil
+		} else {
+			return fmt.Errorf("Error calling %s:\n\t '%q'", endpoint, err)
+		}
 	}
-
 	d.Set("type", resp.Type)
 
 	return nil
@@ -104,9 +106,9 @@ func resourceDedicatedNASHAPartitionAccessDelete(d *schema.ResourceData, meta in
 	config := meta.(*Config)
 	serviceName := d.Get("service_name").(string)
 	partitionName := d.Get("partition_name").(string)
-	ip := url.PathEscape(d.Get("ip").(string))
+	ipsubnet, _ := normalizeIPSubnet(d.Get("ip").(string))
 
-	endpoint := fmt.Sprintf("/dedicated/nasha/%s/partition/%s/access/%s", serviceName, partitionName, ip)
+	endpoint := fmt.Sprintf("/dedicated/nasha/%s/partition/%s/access/%s", serviceName, partitionName, url.PathEscape(ipsubnet))
 
 	resp := &DedicatedNASHATask{}
 
