@@ -57,6 +57,11 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
+			// LIBE Legacy
+                        "ovh_cloud_instance":           resourceCloudInstance(),
+                        "ovh_cloud_volume":             resourceCloudVolume(),
+                        "ovh_ip_loadbalancing_backend": resourceIpLoadbalancingBackend(),
+
 			"ovh_iploadbalancing_tcp_farm":         resourceIpLoadbalancingTcpFarm(),
 			"ovh_iploadbalancing_tcp_farm_server":  resourceIpLoadbalancingTcpFarmServer(),
 			"ovh_iploadbalancing_http_route":       resourceIPLoadbalancingRouteHTTP(),

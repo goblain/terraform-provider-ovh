@@ -174,7 +174,9 @@ func resourceIpLoadbalancingTcpFarmServerRead(d *schema.ResourceData, meta inter
 	if r.Cookie != nil {
 		d.Set("cookie", *r.Cookie)
 	}
-	d.Set("port", *r.Port)
+	if r.Port != nil {
+		d.Set("port", *r.Port)
+	}
 	if r.ProxyProtocolVersion != nil {
 		d.Set("proxy_protocol_version", *r.ProxyProtocolVersion)
 	}
